@@ -25,6 +25,7 @@ class SearchTools():
         if 'organic' not in response.json():
             return "Sorry, I couldn't find anything about that, there could be an error with you serper api key."
         else:
+            return response.json()['organic']
             results = response.json()['organic']
             string = []
             print("Results:", results[:top_result_to_return])
