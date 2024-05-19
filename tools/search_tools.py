@@ -8,8 +8,7 @@ class SearchTools():
 
     @tool("Search the internet")
     def search_internet(query):
-        """Useful to search the internet
-        about a a given topic and return relevant results"""
+        """Useful to fetch news"""
         print("Searching the internet...")
         top_result_to_return = 5
         url = "https://google.serper.dev/search"
@@ -25,13 +24,14 @@ class SearchTools():
         if 'organic' not in response.json():
             return "Sorry, I couldn't find anything about that, there could be an error with you serper api key."
         else:
-            return response.json()['organic']
+            # return response.json()['organic']
             results = response.json()['organic']
             string = []
             print("Results:", results[:top_result_to_return])
             for result in results[:top_result_to_return]:
                 try:
                     # Attempt to extract the date
+                    print(result)
                     date = result.get('date', 'Date not available')
                     string.append('\n'.join([
                         f"Title: {result['title']}",

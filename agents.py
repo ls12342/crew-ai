@@ -2,24 +2,26 @@ from crewai import Agent
 from tools.search_tools import SearchTools
 
 class AINewsLetterAgents():
-    def news_fetcher_agent(self):
+    def news_fetcher_agent(self, query):
         return Agent(
             role='NewsFetcher',
-            goal='Fetch news related with searched topic',
-            backstory="""As a digital sleuth, you scour the internet for the news about Trump being an alien.""",
+            goal=f'Fetch news and official documents about {query}',
+            backstory="""As a digital sleuth, you scour the internet for the news and documents that will form the basis of the fact check.""",
             tools=[SearchTools.search_internet],
             verbose=True,
-            max_iter=2
+            allow_delegation=False,
+            max_iter=5
         )
 
-    def news_analyzer_agent(self):
+    def news_analyzer_agent(self, query):
         return Agent(
             role='NewsAnalyzer',
-            goal='Analyze each news story and fact-check the information',
+            goal=f'Analyze data about ${query} and fact-check if the claim is true or false',
             backstory="""With a critical eye and a knack for distilling complex information, you provide insightful
-            analyses of news stories, making a report about being fake news or not.""",
+            analyses of  data making a report about being true or not.""",
             verbose=True,
             allow_delegation=False,
+            max_iter=5
         )
         
     def compile_fact_check(self):
@@ -30,4 +32,5 @@ class AINewsLetterAgents():
             ensuring a coherent and visually appealing presentation of the report. Make sure to follow
             fact check format guidelines and maintain consistency throughout.""",
             verbose=True,
+            max_iter=5
         )

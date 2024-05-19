@@ -2,38 +2,19 @@ from datetime import datetime
 from crewai import Task
 
 class AINewsLetterTasks():
-    def fetch_news_task(self, agent):
+    def fetch_news_task(self, agent, query):
         return Task(
-            description=f'Fetch news related with trump being an alien',
+            description=f'Fetch relevant news and official documents about {query}',
             agent=agent,
-            expected_output="""Fetch news related with trump being an alien, URLs, and a brief summary. 
-                Example Output: 
-                [
-                    {  'title': 'Trump goes to the hospital', 
-                    'url': 'https://example.com/story1', 
-                    'summary': 'Trump is not an alien'
-                    }, 
-                    {{...}}
-                ]
-            """
+            expected_output=f"Data about ${query}, URLs, and a brief summary."
         )
 
-    def analyze_news_task(self, agent, context):
+    def analyze_news_task(self, agent, context, query):
         return Task(
-            description='Analyze each news story check if they confirm if the claim (trump is an alien) is true or false',
+            description=f'Analyze each news story check if they confirm if the claim ${query} is true or false',
             agent=agent,
             context=context,
-            expected_output="""A markdown-formatted analysis for each news story, including a rundown, detailed bullet points, 
-                and a "Why it matters" section. 
-                Example Output: 
-                '## Trump goes to the hospital\n\n
-                **The Rundown:
-                ** AI made a splash in this year\'s Super Bowl commercials...\n\n
-                **The details:**\n\n
-                - Microsoft\'s Copilot spot showcased its AI assistant...\n\n
-                **Why it matters:** While AI-related ads have been rampant over the last year, its Super Bowl presence is a big mainstream moment.\n\n'
-            """
-        )
+            expected_output="An analysis for each news and documents, bringing all the data and the URL of the source of the information.") 
 
     def compile_fact_check_task(self, agent, context):
         return Task(
@@ -52,3 +33,4 @@ class AINewsLetterTasks():
                 [BBC](https://www.bbc.com)\\n\\n
             """,
         )
+        
