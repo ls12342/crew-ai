@@ -7,69 +7,74 @@ from agents import AINewsLetterAgents
 from tasks import AINewsLetterTasks
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
-
-# TODO: 
-# Add vector data base embedding for better result
-# Add streamlit ui for better visualization
 load_dotenv()
 
-print(os.environ["GROQ_API_KEY"])
-print(os.environ["OPENAI_MODEL_NAME"])
-llm = ChatGroq(
-        temperature=0, 
-        groq_api_key = os.environ["GROQ_API_KEY"], 
-        model_name= os.environ["OPENAI_MODEL_NAME"]
-    )
-    
-# Initialize the agents and tasks
-agents = AINewsLetterAgents()
-tasks = AINewsLetterTasks()
+# TODO:
+# Add vector data base embedding for better result
+# https: // www.youtube.com/watch?v = iJjSjmZnNlI
 
-# Initialize the Ollama LLama3 language model
-# DolphinLLama3 = ChatOpenAI(
-#     model = "dolphin-llama3",
-#     base_url = "http://localhost:11434/v1"
-# )
 
-# Instantiate the agents
-def buildCrew(query):
-        news_fetcher = agents.news_fetcher_agent(query)
-        news_analyzer = agents.news_analyzer_agent(query)
-        fact_compiler = agents.compile_fact_check()
-        fetch_news_task = tasks.fetch_news_task(news_fetcher, query)
-        analyze_news_task = tasks.analyze_news_task(news_analyzer, [fetch_news_task], query)
-        compile_fact_check_task = tasks.compile_fact_check_task(
-        fact_compiler, [analyze_news_task])
-        return Crew(
-        agents=[news_fetcher, 
-                news_analyzer,
-                fact_compiler
-            ],
+def buildCrew(query, llm):
+    agents = AINewsLetterAgents()
+    tasks = AINewsLetterTasks()
+    news_fetcher = agents.news_fetcher_agent(query)
+    news_analyzer = agents.news_analyzer_agent(query)
+    fact_compiler = agents.compile_fact_check()
+    fetch_news_task = tasks.fetch_news_task(news_fetcher, query)
+    analyze_news_task = tasks.analyze_news_task(
+        news_analyzer, [fetch_news_task], query)
+    compile_fact_check_task = tasks.compile_fact_check_task(
+        fact_compiler, [analyze_news_task], query)
+    return Crew(
+        agents=[
+            news_fetcher,
+            news_analyzer,
+            fact_compiler
+        ],
         tasks=[fetch_news_task, analyze_news_task, compile_fact_check_task],
         process=Process.hierarchical,
         manager_llm=llm,
         llm=llm,
         verbose=10
     )
-# Instantiate the tasks
-
-# Form the crew
 
 
-def crew_kickoff(query):
+def crew_kickoff(api, model, query):
+    print('API:', api)
+    print('Model:', model)
+    print('Query:', query)
+    if api == "ollama":
+        llm = ChatOpenAI(
+            model=model,
+            base_url="http://localhost:11434/v1"
+        )
+    if api == "groq":
+        print(os.environ["GROQ_API_KEY"])
+        llm = ChatGroq(
+            temperature=0,
+            model_name=model
+        )
+
     # Build the crew with parameters
-    crew = buildCrew(query)
-    
-    # Kick off the crew's work
+    crew = buildCrew(query, llm)
     results = crew.kickoff()
-
-    # Print the results
     print("Crew Work Results:")
     print(results)
-    
+    return results
+
+
 iface = gr.Interface(
     fn=crew_kickoff,
-    inputs=["text"],
+    inputs=[
+        gr.Radio(["ollama", "groq"], label="API"),
+        gr.Dropdown(
+            ['wizardlm2', 'gemma', 'gemma-7b-it'],
+            value=['wizardlm2', 'gemma', 'gemma-7b-it'],
+            multiselect=False,
+            label="Model",
+        ),
+        gr.Textbox(label="Fact")
+    ],
     outputs="text",
     title="Fact Check Crew",
 )
