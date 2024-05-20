@@ -43,7 +43,7 @@ class SearchNewsDB:
         if all_splits:
             embedding_function = OllamaEmbeddings(model="nomic-embed-text")
             # LanceDB as vector store
-            table = lanceDBConnection(dataset)
+            table = lanceDBConnection()
             vectorstore = LanceDB.from_documents(
                 all_splits, embedding=embedding_function, connection=table)
             retriever = vectorstore.similarity_search(query)
