@@ -8,13 +8,15 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from fact_check_crew.db import lanceDBConnection
 
 
-class SearchNewsDB:
-    @tool("News DB Tool")
-    def news(query: str):
-        """Fetch news articles and process their contents"""
+class SearchDataDB:
+    @tool("Data DB Tool")
+    def data(query: str):
+        """Fetch data and process their contents"""
+        print("Query:", query)
+
         API_KEY = os.getenv(
             'NEWSAPI_KEY')  # Fetch API key from environment variable
-        base_url = f"https://newsapi.org/v2/top-headlines?sources=techcrunch"
+        base_url = f"httpsp://newsapi.org/v2/everything?q=stock${query}"
 
         params = {
             'sortBy': 'publishedAt',
@@ -30,6 +32,7 @@ class SearchNewsDB:
         articles = response.json().get('articles', [])
         all_splits = []
         for article in articles:
+            print("article", article)
             # Assuming WebBaseLoader can handle a list of URLs
             loader = WebBaseLoader(article['url'])
             docs = loader.load()
@@ -41,10 +44,11 @@ class SearchNewsDB:
 
         # Index the accumulated content splits if there are any
         if all_splits:
-            print("All splits:", all_splits)
             embedding_function = OllamaEmbeddings(model="nomic-embed-text")
             # LanceDB as vector store
-            table = lanceDBConnection()
+            emb = embedding_function.embed_query("hello_world")
+            dataset = [{"vector": emb, "text": "dummy_text"}]
+            table = lanceDBConnection(dataset)
             vectorstore = LanceDB.from_documents(
                 all_splits, embedding=embedding_function, connection=table)
             retriever = vectorstore.similarity_search(query)

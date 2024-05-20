@@ -4,6 +4,7 @@ import os
 import requests
 from langchain.tools import tool
 
+
 class SearchTools():
 
     @tool("Search the internet")
@@ -13,7 +14,7 @@ class SearchTools():
         top_result_to_return = 5
         url = "https://google.serper.dev/search"
         payload = json.dumps(
-            {"q": query, "num": top_result_to_return, "tbm": "nws"})
+            {"q": f"${query} stock price", "num": top_result_to_return, "tbm": "nws"})
         headers = {
             'X-API-KEY': os.environ['SERPER_API_KEY'],
             'content-type': 'application/json'
@@ -26,7 +27,16 @@ class SearchTools():
         else:
             # return response.json()['organic']
             results = response.json()['organic']
+            print("Results:", results)
             string = []
+            if response.json().get('answerBox'):
+                answer = response.json().get('answerBox')
+                string.append('\n'.join([
+                    f"Title: {answer['title']}",
+                    f"Answer: {answer['answer']}",
+                    f"Source: {answer['source']}",
+                    "\n-----------------"
+                ]))
             print("Results:", results[:top_result_to_return])
             for result in results[:top_result_to_return]:
                 try:
@@ -35,6 +45,7 @@ class SearchTools():
                     date = result.get('date', 'Date not available')
                     string.append('\n'.join([
                         f"Title: {result['title']}",
+                        f"Link: {result['link']}",
                         f"Link: {result['link']}",
                         f"Date: {date}",  # Include the date in the output
                         f"Snippet: {result['snippet']}",

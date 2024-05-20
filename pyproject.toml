@@ -5,7 +5,7 @@ description = "optmize-response-crew using crewAI"
 authors = ["Lucas Zalfa <zalaf.lucas@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<=3.13"
+python = ">=3.10,<3.12"
 langchain = "0.1.10"
 crewai = "^0.30.11"
 langchain-community = "0.0.25"
@@ -15,6 +15,8 @@ requests = "^2.32.0"
 duckduckgo-search = "^6.1.0"
 streamlit = "^1.34.0"
 lancedb = "^0.6.13"
+sec-api = "^1.0.18"
+unstructured = "^0.14.0"
 
 [tool.poetry.scripts]
 fact_check_crew = "fact_check_crew.main:run"
