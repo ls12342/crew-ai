@@ -58,6 +58,7 @@ class FactCheckCrew():
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
-            process=Process.sequential,
+            process=Process.hierarchical,
+            manager_llm=self.groq_llm,
             verbose=2
         )
