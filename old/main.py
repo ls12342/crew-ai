@@ -68,8 +68,8 @@ iface = gr.Interface(
     inputs=[
         gr.Radio(["ollama", "groq"], label="API"),
         gr.Dropdown(
-            ['wizardlm2', 'gemma', 'gemma-7b-it'],
-            value=['wizardlm2', 'gemma', 'gemma-7b-it'],
+            ['wizardlm2', 'gemma', 'gemma-7b-it', 'mixtral-8x7b-32768'],
+            value=['wizardlm2', 'gemma', 'gemma-7b-it', 'mixtral-8x7b-32768'],
             multiselect=False,
             label="Model",
         ),

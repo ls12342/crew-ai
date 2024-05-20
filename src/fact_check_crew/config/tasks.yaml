@@ -1,0 +1,12 @@
+research_fact_data_task:
+  description: >
+    Use a search tool to look up this fact: {fact}. 
+    The goal is to prepare enough information to make an informed analysis of the fact's truthiness .
+  expected_output: >
+    All of the relevant information about the {fact}.
+
+analyze_fact_data_task:
+  description: >
+    Take {fact} information, analyze it, and provide a analysis, including: Resources and all the information needed to explain if the fact is true or not.
+  expected_output: >
+    A nicely formatted analysis including all of the information necessary for a thorough financial of fact to check its truthiness.
