@@ -17,13 +17,14 @@ class FactCheckCrew():
     def __init__(self, api: Union[str, None] = None, model: str = None) -> None:
         self.api = api
         self.model = model
+        print(self.api)
         if self.api == "GROQ":
             self.groq_llm = ChatGroq(temperature=0, model_name=self.model)
-        elif self.api == "OLLAMA":
-            self.groq_llm = ChatOpenAI(
-                model=model,
-                base_url="http://localhost:11434/v1"
-            )
+        # elif self.api == "OLLAMA":
+        #     self.groq_llm = ChatOpenAI(
+        #         model=model,
+        #         base_url="http://localhost:11434/v1"
+        #     )
 
     @agent
     def company_researcher(self) -> Agent:
