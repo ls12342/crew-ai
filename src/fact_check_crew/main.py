@@ -1,7 +1,7 @@
 import os
 import argparse
-import streamlit as st
 from dotenv import load_dotenv
+import streamlit as st
 from crew import FactCheckCrew
 load_dotenv()
 
@@ -13,6 +13,7 @@ def runCrew(api, model, fact):
         'fact': fact,
     }
     return FactCheckCrew(api, model).crew().kickoff(inputs=inputs)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

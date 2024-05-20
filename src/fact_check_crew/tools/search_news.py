@@ -41,6 +41,7 @@ class SearchNewsDB:
 
         # Index the accumulated content splits if there are any
         if all_splits:
+            print("All splits:", all_splits)
             embedding_function = OllamaEmbeddings(model="nomic-embed-text")
             # LanceDB as vector store
             table = lanceDBConnection()

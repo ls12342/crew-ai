@@ -32,6 +32,7 @@ class FactCheckCrew():
             config=self.agents_config['data_researcher'],
             groq_llm=self.groq_llm,
             tools=[SearchNewsDB().news],
+            max_itr=5
         )
 
     @agent
