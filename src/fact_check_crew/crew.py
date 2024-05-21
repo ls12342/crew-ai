@@ -3,7 +3,7 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
-from tools.search_tools import SearchTools
+from tools.get_events import GetEvents
 from tools.sec_tools import SECTools
 # from langchain_community.tools import DuckDuckGoSearchRun
 
@@ -27,36 +27,36 @@ class FactCheckCrew():
             )
 
     @agent
-    def company_researcher(self) -> Agent:
+    def event_researcher(self) -> Agent:
         return Agent(
-            config=self.agents_config['company_researcher'],
+            config=self.agents_config['event_researcher'],
             llm=self.groq_llm,
             tools=[
                 # SearchDataDB().data
-                SearchTools().search_internet
+                GetEvents().data
             ],
         )
 
-    @agent
-    def company_analyst(self) -> Agent:
-        return Agent(
-            config=self.agents_config['company_analyst'],
-            llm=self.groq_llm
-        )
+    # @agent
+    # def company_analyst(self) -> Agent:
+    #     return Agent(
+    #         config=self.agents_config['company_analyst'],
+    #         llm=self.groq_llm
+    #     )
 
     @task
-    def research_company_task(self) -> Task:
+    def research_event_task(self) -> Task:
         return Task(
-            config=self.tasks_config['research_company_task'],
-            agent=self.company_researcher()
+            config=self.tasks_config['research_event_task'],
+            agent=self.event_researcher()
         )
 
-    @task
-    def analyze_company_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['analyze_company_task'],
-            agent=self.company_analyst()
-        )
+    # @task
+    # def analyze_company_task(self) -> Task:
+    #     return Task(
+    #         config=self.tasks_config['analyze_company_task'],
+    #         agent=self.company_analyst()
+    #     )
 
     @crew
     def crew(self) -> Crew:

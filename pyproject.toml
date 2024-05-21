@@ -17,6 +17,7 @@ streamlit = "^1.34.0"
 lancedb = "^0.6.13"
 sec-api = "^1.0.18"
 unstructured = "^0.14.0"
+gcsa = "^2.3.0"
 
 [tool.poetry.scripts]
 fact_check_crew = "fact_check_crew.main:run"
